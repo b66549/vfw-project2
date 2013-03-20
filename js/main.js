@@ -4,32 +4,53 @@
 
 // Line to wait until the DOM is ready
 window.addEventListener("DOMContentLoaded", function() {
-	var addNewGoal = function() {
 	
-		// Initialize the local variables with the html elements
-		var myGoalHeadline = document.getElementById("goalheadline");
-		var myGoalType = document.getElementById("goaltype");
-		var myDeadline = document.getElementById("deadline");
-		var mySize = document.getElementById("size");
-		var myDetails = document.getElementById("details");
-		var myGoalComplete = document.getElementById("goalcomplete");
+	// function to create the select field element
+	function makeGoalTypes() {
+		var myformTag = document.getElementsByTagName("form"), selectList = document.getElementById("selecttype"), createSelect = document.createElement("select");
+		createSelect.setAttribute("id", "types");
 	
-		// Initialize the array for the form data and then check if our checkbox is checked or not, then enter data
-		var myArray = [];
-		isChecked = myGoalComplete.checked;	
-		if (isChecked) {
-			myArray = [myGoalHeadline.value, myGoalType.value, myDeadline.value, mySize.value, myDetails.value, myGoalComplete.value];
-		} else {
-			myArray = [myGoalHeadline.value, myGoalType.value, myDeadline.value, mySize.value, myDetails.value];
-		};
-		
-		// Test output
-		console.log(myArray);
-		
-			
-		return;
+		for (var i = 0, j = goalTypes.length; i < j; i++) {
+			var createOption = document.createElement("option");
+			var optionText = goalTypes[i];
+			createOption.setAttribute("value", optionText);
+			createOption.innerHTML = optionText;
+			createSelect.appendChild(createOption);
+		}
+		selectList.appendChild(createSelect);
+	
 	}
 	
+	function getGoalCompleteCheckBoxValue() {
+		if(document.getElementById(goalcomplete).checked) {
+			goalCompleteValue = document.getElementById(goalcomplete).value;
+		} else {
+			goalCompleteValue = "Goal Not Yet Achieved";
+		}
+	}
+	
+	function addNewGoal() {
+	
+		// random number generator
+		var uniqueID = Math.floor(Math.random() * 1000001);
+		
+		// Initialize the local variables with the html elements
+		// Create an Object with each property an array that contains the form label and the input value
+		var goalObj 			= {};
+		goalObj.goalHeadline 	= ["Goal:", document.getElementById("goalheadline").value];
+		goalObj.goalType 		= ["Goal Type:", document.getElementById("goaltype").value];
+		goalObj.deadline 		= ["Deadline:", document.getElementById("deadline").value];
+		goalObj.size 			= ["Size:", document.getElementById("size").value];
+		goalObj.details 		= ["Details", document.getElementById("details").value];
+		goalObj.goalcomplete 	= ["Goal Complete:", goalCompleteValue]; document.getElementById("goalcomplete").checked];
+			
+		// Save the data into local Storage
+		// Use Stringify to convert the object into a string
+		localStorage.setItem(uniqueID, JSON.stringify(goalObj));
+		alert("Goal Saved!");	
+		return;
+	}
+/*	
 	var displayGoalsList = function() {
 	
 		var myDisplayDataDiv = document.getElementById("displaydata");
@@ -43,10 +64,25 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 	}
 	
+	var clearGoalsList = function() {
+	
+	
+	
+	
+	}
+*/	
+	// array for the goal types
+	var goalTypes = ["--Choose a Type--", "Personal", "Business", "Travel", "Finance", "Education"];
+	var goalCompleteValue = "Goal Not Yet Achieved";
+	makeGoalTypes();
 	
 	var saveGoalButton = document.getElementById("savegoal");
 	saveGoalButton.addEventListener("click", addNewGoal);
 	
-	// var displayData = document.getElementById(
+	var displayDataLink = document.getElementById("display");
+	displayDataLink.addEventListener("click", displayGoalsList);
+	
+	var clearDataLink = document.getElementById("clear");
+	clearDataLink.addEventListener("click", clearGoalsList);
 
 });
